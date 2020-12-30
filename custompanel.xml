@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pyvcp>
+
+<hbox>
+
+
+  <vbox>
+  <relief>RAISED</relief>
+  <bd>3</bd>
+
+	<hbox>
+		<radiobutton>
+			<choices>["Auto", "Single", "Jog"]</choices>
+			<halpin>"run-mode"</halpin>
+			<initval>0</initval>
+		</radiobutton>
+	</hbox>
+
+        <hbox>
+	<relief>RAISED</relief>
+	  <jogwheel>
+	    <halpin>"my-wheel"</halpin>
+	    <cpr>100</cpr>
+	    <size>200</size>
+          </jogwheel>
+        </hbox>
+
+	<hbox>
+	  <label>
+		<font>("Helvetica",16)</font>
+		<text>"Feed"</text>
+	  </label>
+	  <scale>
+		<font>("Helvetica",10)</font>
+		<width>"25"</width>
+		<halpin>"feed-pot"</halpin>
+		<resolution>1.0</resolution>
+		<orient>HORIZONTAL</orient>
+		<initval>100</initval>
+		<min_>0</min_>
+		<max_>150</max_>
+		<param_pin>0</param_pin>	
+	  </scale>
+	</hbox>
+
+	<hbox>
+	  <label>
+		<font>("Helvetica",16)</font>
+		<text>"Speed"</text>
+	  </label>
+	  <scale>
+		<font>("Helvetica",10)</font>
+		<width>"25"</width>
+		<halpin>"speed-pot"</halpin>
+		<resolution>1.0</resolution>
+		<orient>HORIZONTAL</orient>
+		<initval>100</initval>
+		<min_>50</min_>
+		<max_>150</max_>
+		<param_pin>0</param_pin>	
+	  </scale>
+	</hbox>
+
+
+        <hbox>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"x-plus"</halpin>
+            <text>"X+"</text>
+          </button>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"x-minus"</halpin>
+            <text>"X-"</text>
+          </button>
+          <led>
+            <halpin>"x-led"</halpin>
+            <on_color>"yellow"</on_color>
+            <off_color>"grey"</off_color>
+          </led>
+        </hbox>
+        <hbox>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"y-plus"</halpin>
+            <text>"Y+"</text>
+          </button>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"y-minus"</halpin>
+            <text>"Y-"</text>
+          </button>
+          <led>
+            <halpin>"y-led"</halpin>
+            <on_color>"yellow"</on_color>
+            <off_color>"grey"</off_color>
+          </led>
+        </hbox>
+        
+        <hbox>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"z-plus"</halpin>
+            <text>"Z+"</text>
+          </button>
+          <button>
+            <font>("Helvetica",16)</font>
+            <width>3</width>
+            <halpin>"z-minus"</halpin>
+            <text>"Z-"</text>
+          </button>
+          <led>
+            <halpin>"z-led"</halpin>
+            <on_color>"yellow"</on_color>
+            <off_color>"grey"</off_color>
+          </led>
+        </hbox>
+
+	<hbox>
+		<button>
+			<halpin>"stop-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"STOP"</text>
+		</button>
+		<led>
+			<halpin>"stop-led"</halpin>
+			<on_color>"red"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+		<button>
+			<halpin>"cycle-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"CYCLE"</text>
+		</button>
+		<led>
+			<halpin>"cycle-led"</halpin>
+			<on_color>"green"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+	</hbox>
+ 
+	<hbox>
+		<button>
+			<halpin>"coolant-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"COOLANT"</text>
+		</button>
+		<led>
+			<halpin>"coolant-led"</halpin>
+			<on_color>"blue"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+		<button>
+			<halpin>"spindle-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"SPINDLE"</text>
+		</button>
+		<led>
+			<halpin>"spindle-led"</halpin>
+			<on_color>"yellow"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+	</hbox>
+
+	<hbox>
+		<checkbutton>
+			<halpin>"e-stop"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"E-STOP"</text>
+		</checkbutton>
+		<led>
+			<halpin>"e-stop-led"</halpin>
+			<on_color>"red"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+		<button>
+			<halpin>"power-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"POWER"</text>
+		</button>
+		<led>
+			<halpin>"power-led"</halpin>
+			<on_color>"white"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+	</hbox>
+</vbox>
+
+</hbox>
+</pyvcp>
