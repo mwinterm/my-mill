@@ -9,6 +9,9 @@ loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EM
 loadrt ddt names=ddt_x,ddt_xv,ddt_y,ddt_yv,ddt_z,ddt_zv
 # load additional blocks
 loadrt hypot names=vel_xy,vel_xyz
+#load other hal components
+loadrt or2 names=or2_0,or2_1,or2_2
+loadrt flipflop names=flipflop_0
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
