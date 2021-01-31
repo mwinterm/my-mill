@@ -14,6 +14,7 @@ addf lut5.1 servo-thread
 addf lut5.2 servo-thread
 addf or2_1 servo-thread
 addf flipflop_0 servo-thread
+addf conv_feed servo-thread
 
 setp lut5.0.function 0x80
 setp lut5.1.function 0x80
@@ -65,3 +66,12 @@ net _program_pause <= or2_1.out
 #LEDs
 net _program.is-running => pyvcp.cycle-led
 net _program.is-paused => pyvcp.pause-led
+net _flood_is_on halui.flood.is-on => pyvcp.coolant-led
+net _spindle_is_on halui.spindle.0.is-on => pyvcp.spindle-led
+
+#Feed override
+setp halui.feed-override.direct-value true
+setp halui.feed-override.count-enable true
+setp halui.feed-override.scale 0.01
+net _feed_override pyvcp.feed-pot-f => conv_feed.in
+net _feed_override_int conv_feed.out => halui.feed-override.counts
