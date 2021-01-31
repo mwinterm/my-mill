@@ -69,9 +69,14 @@ net _program.is-paused => pyvcp.pause-led
 net _flood_is_on halui.flood.is-on => pyvcp.coolant-led
 net _spindle_is_on halui.spindle.0.is-on => pyvcp.spindle-led
 
-#Feed override
+#Feed/Rapid override
+net _feed_override pyvcp.feed-pot-f => conv_feed.in
+net _feed_override_int conv_feed.out
 setp halui.feed-override.direct-value true
 setp halui.feed-override.count-enable true
 setp halui.feed-override.scale 0.01
-net _feed_override pyvcp.feed-pot-f => conv_feed.in
-net _feed_override_int conv_feed.out => halui.feed-override.counts
+net _feed_override_int => halui.feed-override.counts
+setp halui.rapid-override.direct-value true
+setp halui.rapid-override.count-enable true
+setp halui.rapid-override.scale 0.01
+net _feed_override_int => halui.rapid-override.counts
