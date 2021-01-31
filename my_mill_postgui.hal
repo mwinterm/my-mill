@@ -1,0 +1,34 @@
+# Include your custom_postgui HAL commands here
+# This file will not be overwritten when you run PNCconf again
+
+
+#add modules
+loadrt and2 count=2
+
+#add functions to servo-thread
+addf and2.0 servo-thread
+addf and2.1 servo-thread
+
+
+
+# connect user pannel
+#net _auto_mode halui.mode.auto pyvcp.run-mode.Auto
+#net _single_mode pyvcp.run-mode.Single
+net _cycle-button <= pyvcp.cycle-button
+net _program.is-idle <= halui.program.is-idle
+net _program.is-paused <= halui.program.is-paused
+net _program.is-running <= halui.program.is-running
+#program start
+net _cycle-button => and2.0.in0
+net _program.is-idle => and2.0.in1
+net _and2.0.out and2.0.out => halui.program.run
+#program resume
+net _cycle-button => and2.1.in0
+net _program.is-paused => and2.1.in1
+net _and2.1.out and2.1.out => halui.program.resume
+#program pause
+net _pause-button <= pyvcp.pause-button
+net _pause-button => halui.program.pause
+#LEDs
+net _program.is-running => pyvcp.cycle-led
+net _program.is-paused => pyvcp.pause-led
