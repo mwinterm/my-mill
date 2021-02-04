@@ -15,6 +15,11 @@ loadrt flipflop names=flipflop_0
 loadrt conv_float_s32 names=conv_feed
 loadrt and2 count=3
 loadrt lut5 count=3
+loadrt mult2 count=1
+loadrt limit2 names=limit_speed
+loadrt lowpass names=spindle_mass
+loadrt near names=near_speed
+loadrt scale names=rpm_rps,jog_speed_scale
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
