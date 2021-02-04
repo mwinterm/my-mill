@@ -9,17 +9,28 @@ addf and2.2 servo-thread
 addf lut5.0 servo-thread
 addf lut5.1 servo-thread
 addf lut5.2 servo-thread
+addf lut5.3 servo-thread
+addf lut5.4 servo-thread
 addf or2_1 servo-thread
+addf or2_3 servo-thread
+addf or2_4 servo-thread
+addf or2_5 servo-thread
 addf flipflop_0 servo-thread
 addf conv_feed servo-thread
 addf mult2.0 servo-thread
 addf jog_speed_scale servo-thread
+addf rapid_speed_mux servo-thread
+addf not.0 servo-thread
+addf not.1 servo-thread
+addf not.2 servo-thread
+addf not.3 servo-thread
 
 
 setp lut5.0.function 0x8000
 setp lut5.1.function 0x8000
 setp lut5.2.function 0x8000
-
+setp lut5.3.function 0xffffffed
+setp lut5.4.function 0xfffffff9
 
 
 # connect user pannel
@@ -93,24 +104,47 @@ net _feed_override_int => halui.rapid-override.counts
 
 
 #Rapid buttons
-#net _feed_override => halui.axis.jog_speed
-#setp halui.axis.jog_speed 500
-#setp halui.joint.jog_speed 500
-#setp halui.axis.jog-speed 500
-#net _feed_override => halui.axis.jog-speed
+#get max speeds and feed-override
+net _rapid_speed_mux_in0 ini.0.max_velocity => rapid_speed_mux.in0 
+net _rapid_speed_mux_in1 ini.1.max_velocity => rapid_speed_mux.in1 
+net _rapid_speed_mux_in2 ini.2.max_velocity => rapid_speed_mux.in2 
+net _rapid_speed_mux_sel0 => rapid_speed_mux.sel0
+net _rapid_speed_mux_sel1 => rapid_speed_mux.sel1
 
-net _max_speed_x <= ini.0.max_limit 
 net _feed_override => mult2.0.in0
-net _max_speed_x => mult2.0.in1
+net _max_jog_speed => mult2.0.in1
 setp jog_speed_scale.gain 0.01
 net _mult2_0_out mult2.0.out => jog_speed_scale.in
 net _jog_speed_scfale_out jog_speed_scale.out => halui.axis.jog-speed
 
+#rapid jog x-axis
 net _jog_x_plus pyvcp.x-plus => halui.axis.x.plus
 net _jog_x_minus pyvcp.x-minus => halui.axis.x.minus
+net _jog_x_plus pyvcp.x-plus => or2_3.in0
+net _jog_x_minus pyvcp.x-minus => or2_3.in1
+net _or2_3_out <= or2_3.out
+net _or2_3_out => lut5.3.in-0
+net _or2_3_out => lut5.4.in-0
+
+#rapid jog y-axis
 net _jog_y_plus pyvcp.y-plus => halui.axis.y.plus
 net _jog_y_minus pyvcp.y-minus => halui.axis.y.minus
+net _jog_y_plus pyvcp.y-plus => or2_4.in0
+net _jog_y_minus pyvcp.y-minus => or2_4.in1
+net _or2_4_out <= or2_4.out
+net _or2_4_out => lut5.3.in-1
+net _or2_4_out => lut5.4.in-1
+
+#rapid jog z-axis
 net _jog_z_plus pyvcp.z-plus => halui.axis.z.plus
 net _jog_z_minus pyvcp.z-minus => halui.axis.z.minus
-#net _jog_x_plus pyvcp.x-plus => halui.joint.x.plus
-#net _jog_x_minus pyvcp.x-minus => halui.joint.x.minus
+net _jog_z_plus pyvcp.z-plus => or2_5.in0
+net _jog_z_minus pyvcp.z-minus => or2_5.in1
+net _or2_5_out <= or2_5.out
+net _or2_5_out => lut5.3.in-2
+net _or2_5_out => lut5.4.in-2
+
+#connect to speed selector mux
+net _rapid_speed_mux_sel0 <= lut5.3.out
+net _rapid_speed_mux_sel1 <= lut5.4.out
+net _max_jog_speed <= rapid_speed_mux.out 
