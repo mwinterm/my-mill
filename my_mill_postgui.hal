@@ -2,13 +2,10 @@
 # This file will not be overwritten when you run PNCconf again
 
 
-#add modules
-loadrt and2 count=2
-loadrt lut5 count=3
-
 #add functions to servo-thread
 addf and2.0 servo-thread
 addf and2.1 servo-thread
+addf and2.2 servo-thread
 addf lut5.0 servo-thread
 addf lut5.1 servo-thread
 addf lut5.2 servo-thread
@@ -16,14 +13,20 @@ addf or2_1 servo-thread
 addf flipflop_0 servo-thread
 addf conv_feed servo-thread
 
-setp lut5.0.function 0x80
-setp lut5.1.function 0x80
-setp lut5.2.function 0x80
+
+setp lut5.0.function 0x8000
+setp lut5.1.function 0x8000
+setp lut5.2.function 0x8000
 
 
 
 # connect user pannel
 #Wire the run-mode toggle
+net _machine_program_mode pyvcp.machine-mode.Program => halui.mode.auto
+net _machine_mdi_mode pyvcp.machine-mode.MDI => halui.mode.mdi
+net _machine_manual_mode <= pyvcp.machine-mode.Manual => halui.mode.manual
+
+
 net _program_auto_mode <= pyvcp.run-mode.Auto
 net _program_single_mode <= pyvcp.run-mode.Single
 net _program_jog_mode <= pyvcp.run-mode.Jog
@@ -42,17 +45,20 @@ net _program_run => halui.program.run
 net _cycle-button => lut5.0.in-0
 net _program.is-idle => lut5.0.in-1
 net _program_auto_mode => lut5.0.in-2
+net _machine_program_mode => lut5.0.in-3
 net _program_run <= lut5.0.out
 #program step
 net _program_step => halui.program.step
 net _cycle-button => lut5.1.in-0
 net _program_single_mode => lut5.1.in-1
 net _program_single_mode => lut5.1.in-2
+net _machine_program_mode => lut5.1.in-3
 net _program_step <= lut5.1.out
 #program resume
 net _cycle-button => lut5.2.in-0
 net _program.is-paused => lut5.2.in-1
 net _program_auto_mode => lut5.2.in-2
+net _machine_program_mode => lut5.2.in-3
 net _program_resume lut5.2.out => halui.program.resume
 #program pause
 net _pause-button <= pyvcp.pause-button
@@ -61,7 +67,9 @@ net _program.is-paused => flipflop_0.reset
 net _program_single_mode => flipflop_0.set
 net _flipflop_0_out flipflop_0.out => or2_1.in0
 net _pause-button => or2_1.in1
-net _program_pause <= or2_1.out
+net _machine_program_mode => and2.2.in0
+net _or2_1_out or2_1.out => and2.2.in1
+net _program_pause <= and2.2.out
 
 #LEDs
 net _program.is-running => pyvcp.cycle-led

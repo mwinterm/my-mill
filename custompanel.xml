@@ -7,14 +7,21 @@
   <vbox>
   <relief>RAISED</relief>
   <bd>3</bd>
+	<vbox>
+		<radiobutton>
+			<choices>["Manual", "MDI", "Program"]</choices>
+			<halpin>"machine-mode"</halpin>
+			<initval>0</initval>
+		</radiobutton>
+	</vbox>
 
-	<hbox>
+	<vbox>
 		<radiobutton>
 			<choices>["Auto", "Single", "Jog"]</choices>
 			<halpin>"run-mode"</halpin>
 			<initval>0</initval>
 		</radiobutton>
-	</hbox>
+	</vbox>
 
         <hbox>
 	<relief>RAISED</relief>
