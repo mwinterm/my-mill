@@ -12,11 +12,16 @@ addf and2.5 servo-thread
 addf and2.6 servo-thread
 addf and2.7 servo-thread
 addf and2.8 servo-thread
+addf and2.9 servo-thread
+addf and2.10 servo-thread
 addf lut5.0 servo-thread
 addf lut5.1 servo-thread
 addf lut5.2 servo-thread
 addf lut5.3 servo-thread
 addf lut5.4 servo-thread
+addf lut5.5 servo-thread
+addf lut5.6 servo-thread
+addf lut5.7 servo-thread
 addf or2_1 servo-thread
 addf or2_3 servo-thread
 addf or2_4 servo-thread
@@ -171,14 +176,47 @@ net _rapid_speed_mux_sel1 <= lut5.4.out
 net _max_jog_speed <= rapid_speed_mux.out 
 
 #switch on all leds
-net _program_single_mode => pyvcp.x-led
-net _program_single_mode => pyvcp.y-led
-net _program_single_mode => pyvcp.z-led
+setp lut5.5.function 0x22222262
+setp lut5.6.function 0x22222622
+setp lut5.7.function 0x22262222
+
+net _x_is_selected <= halui.axis.x.is-selected 
+net _x_is_selected => axis.x.jog-enable
+net _y_is_selected <= halui.axis.y.is-selected 
+net _y_is_selected => axis.y.jog-enable
+net _z_is_selected <= halui.axis.z.is-selected 
+net _z_is_selected => axis.z.jog-enable
+
+net _program_single_mode => and2.9.in0
+net _machine_manual_mode => and2.9.in1
+net _manual_single_mode <= and2.9.out
+net _manual_single_mode => lut5.5.in-0
+net _manual_single_mode => lut5.6.in-0
+net _manual_single_mode => lut5.7.in-0
+
+net _program_jog_mode => and2.10.in0
+net _machine_manual_mode => and2.10.in1
+net _manual_jog_mode <= and2.10.out
+net _manual_jog_mode => lut5.5.in-1
+net _manual_jog_mode => lut5.6.in-1
+net _manual_jog_mode => lut5.7.in-1
+
+net _x_is_selected => lut5.5.in-2
+net _x_is_selected => lut5.6.in-2
+net _x_is_selected => lut5.7.in-2
+net _y_is_selected => lut5.5.in-3
+net _y_is_selected => lut5.6.in-3
+net _y_is_selected => lut5.7.in-3
+net _z_is_selected => lut5.5.in-4
+net _z_is_selected => lut5.6.in-4
+net _z_is_selected => lut5.7.in-4
+
+
+net _lut5_5_out lut5.5.out => pyvcp.x-led
+net _lut5_6_out lut5.6.out => pyvcp.y-led
+net _lut5_7_out lut5.7.out => pyvcp.z-led
 
 #Jog-wheel
-setp axis.x.jog-enable true
-setp axis.y.jog-enable true
-setp axis.z.jog-enable true
 setp axis.x.jog-scale 0.01
 setp axis.y.jog-scale 0.01
 setp axis.z.jog-scale 0.01
@@ -189,3 +227,9 @@ net _conv_mpg_in pyvcp.my-wheel => conv_mpg.in
 net _conv_mpg_out conv_mpg.out
 
 net _conv_mpg_out => axis.x.jog-counts
+net _conv_mpg_out => axis.y.jog-counts
+net _conv_mpg_out => axis.z.jog-counts
+
+net _or2_3_out => halui.axis.x.select
+net _or2_4_out => halui.axis.y.select
+net _or2_5_out => halui.axis.z.select
