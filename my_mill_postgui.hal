@@ -17,6 +17,7 @@ addf or2_4 servo-thread
 addf or2_5 servo-thread
 addf flipflop_0 servo-thread
 addf conv_feed servo-thread
+addf conv_mpg servo-thread
 addf mult2.0 servo-thread
 addf jog_speed_scale servo-thread
 addf rapid_speed_mux servo-thread
@@ -148,3 +149,19 @@ net _or2_5_out => lut5.4.in-2
 net _rapid_speed_mux_sel0 <= lut5.3.out
 net _rapid_speed_mux_sel1 <= lut5.4.out
 net _max_jog_speed <= rapid_speed_mux.out 
+
+
+#Jog-wheel
+setp axis.x.jog-enable true
+setp axis.y.jog-enable true
+setp axis.z.jog-enable true
+setp axis.x.jog-scale 0.01
+setp axis.y.jog-scale 0.01
+setp axis.z.jog-scale 0.01
+setp axis.x.jog-vel-mode true
+setp axis.y.jog-vel-mode true
+setp axis.z.jog-vel-mode true
+net _conv_mpg_in pyvcp.my-wheel => conv_mpg.in
+net _conv_mpg_out conv_mpg.out
+
+net _conv_mpg_out => axis.x.jog-counts
