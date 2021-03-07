@@ -23,6 +23,10 @@ loadrt scale names=rpm_rps,jog_speed_scale
 loadrt mux4 names=rapid_speed_mux
 loadrt not count=4
 
+#load user components
+loadusr -W ./blink.py
+loadusr -W ./program_run.py
+
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
 addf motion-controller servo-thread
