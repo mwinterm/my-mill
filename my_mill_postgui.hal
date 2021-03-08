@@ -46,67 +46,29 @@ setp lut5.4.function 0xfffffff9
 
 
 # connect user pannel
-#Wire the run-mode toggle
+#Wire the machine-mode toggles
 net _machine_program_mode pyvcp.machine-mode.Program => halui.mode.auto
 net _machine_mdi_mode pyvcp.machine-mode.MDI => halui.mode.mdi
 net _machine_manual_mode <= pyvcp.machine-mode.Manual => halui.mode.manual
 
-
+#Wire the run-mode toggles
 net _program_auto_mode <= pyvcp.run-mode.Auto
 net _program_single_mode <= pyvcp.run-mode.Single
 net _program_jog_mode <= pyvcp.run-mode.Jog
-#net _auto_mode halui.mode.auto pyvcp.run-mode.Auto
-#net _single_mode pyvcp.run-mode.Single
-
-
 
 #wire the CYCLE/PAUSE buttons
-net _cycle-button <= pyvcp.cycle-button
-net _program.is-idle <= halui.program.is-idle
-net _program.is-paused <= halui.program.is-paused
-net _program.is-running <= halui.program.is-running
-#program start
-net _program_run => halui.program.run
-#net _cycle-button => lut5.0.in-0
-#net _program.is-idle => lut5.0.in-1
-#net _program_auto_mode => lut5.0.in-2
-#net _machine_program_mode => lut5.0.in-3
-#net _program_run <= lut5.0.out
-net _cycle-button => program_run.cycle_button
-net _program.is-idle => program_run.is_idle
 net _program_auto_mode => program_run.auto_toggle
 net _machine_program_mode => program_run.program_mode
-net _program_run <= program_run.run
-#program step
-net _program_step => halui.program.step
-#net _cycle-button => lut5.1.in-0
-#net _program_single_mode => lut5.1.in-1
 net _program_single_mode => program_run.single_toggle
-#net _program_single_mode => lut5.1.in-2
-#net _machine_program_mode => lut5.1.in-3
-#net _program_step <= lut5.1.out
-net _program_step <= program_run.step
-#program resume
-#net _cycle-button => lut5.2.in-0
-#net _program.is-paused => lut5.2.in-1
-net _program.is-paused => program_run.is_paused
-#net _program_auto_mode => lut5.2.in-2
-#net _machine_program_mode => lut5.2.in-3
-#net _program_resume lut5.2.out => halui.program.resume
-net _program_resume program_run.resume => halui.program.resume
-#program pause
-net _pause-button <= pyvcp.pause-button
-net _pause-button => program_run.pause_button
-net _program_pause => halui.program.pause
-net _program.is-paused => flipflop_0.reset 
-net _program_single_mode => flipflop_0.set
-net _flipflop_0_out flipflop_0.out => or2_1.in0
-net _pause-button => or2_1.in1
-net _machine_program_mode => and2.2.in0
-net _or2_1_out or2_1.out => and2.2.in1
-#net _program_pause <= and2.2.out
-net _program_pause <= program_run.pause
-
+net _cycle-button pyvcp.cycle-button => program_run.cycle_button
+net _pause-button pyvcp.pause-button => program_run.pause_button
+net _program.is-idle halui.program.is-idle => program_run.is_idle
+net _program.is-paused halui.program.is-paused => program_run.is_paused
+net _program.is-running halui.program.is-running => program_run.is_running
+net _program_run halui.program.run <= program_run.run
+net _program_step halui.program.step <= program_run.step
+net _program_resume halui.program.resume <= program_run.resume
+net _program_pause halui.program.pause <= program_run.pause
 
 
 #LEDs
