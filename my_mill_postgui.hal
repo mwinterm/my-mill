@@ -71,9 +71,19 @@ net _program_resume halui.program.resume <= program_run.resume
 net _program_pause halui.program.pause <= program_run.pause
 
 
-#LEDs
-net _program.is-running => pyvcp.cycle-led
-net _program.is-paused => pyvcp.pause-led
+#CYCLE/PAUSE LEDs
+net _program.is-running => blink.is_running
+net _program.is-paused => blink.is_paused
+net _program_auto_mode => blink.auto
+net _program_single_mode => blink.single
+net _blink.green blink.green => pyvcp.cycle-led
+net _blink.red blink.red => pyvcp.pause-led
+#net _program.is-running => pyvcp.cycle-led
+#net _program.is-paused => pyvcp.pause-led
+
+
+
+#Other LEDs
 net _flood_is_on halui.flood.is-on => pyvcp.coolant-led
 net _spindle_is_on halui.spindle.0.is-on => pyvcp.spindle-led
 
@@ -189,23 +199,25 @@ net _z_is_selected => lut5.7.in-4
 
 net _lut5_5_out lut5.5.out => pyvcp.x-led
 net _lut5_6_out lut5.6.out => pyvcp.y-led
-#net _lut5_7_out lut5.7.out => pyvcp.z-led
-net _lut5_7_out lut5.7.out => blink.in
-net _blink_out blink.out => pyvcp.z-led
+net _lut5_7_out lut5.7.out => pyvcp.z-led
 
 #Jog-wheel
-setp axis.x.jog-scale 0.01
-setp axis.y.jog-scale 0.01
-setp axis.z.jog-scale 0.01
+setp axis.x.jog-scale 0.001
+setp axis.y.jog-scale 0.001
+setp axis.z.jog-scale 0.001
 setp axis.x.jog-vel-mode true
 setp axis.y.jog-vel-mode true
 setp axis.z.jog-vel-mode true
 net _conv_mpg_in pyvcp.my-wheel => conv_mpg.in
 net _conv_mpg_out conv_mpg.out
+setp progressive_jog.delta_t 0.05
+setp progressive_jog.speed_scale 1.0
+net _conv_mpg_out => progressive_jog.count_in
+net _jog_wheel_count_out progressive_jog.count_out 
 
-net _conv_mpg_out => axis.x.jog-counts
-net _conv_mpg_out => axis.y.jog-counts
-net _conv_mpg_out => axis.z.jog-counts
+net _jog_wheel_count_out => axis.x.jog-counts
+net _jog_wheel_count_out => axis.y.jog-counts
+net _jog_wheel_count_out => axis.z.jog-counts
 
 net _or2_3_out => halui.axis.x.select
 net _or2_4_out => halui.axis.y.select

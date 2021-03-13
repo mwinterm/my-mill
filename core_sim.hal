@@ -26,6 +26,7 @@ loadrt not count=4
 #load user components
 loadusr -W ./blink.py
 loadusr -W ./program_run.py
+loadusr -W ./progressive_jog.py
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
