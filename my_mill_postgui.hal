@@ -57,9 +57,10 @@ net _program_single_mode <= pyvcp.run-mode.Single
 net _program_jog_mode <= pyvcp.run-mode.Jog
 
 #wire the CYCLE/PAUSE buttons
-net _program_auto_mode => program_run.auto_toggle
 net _machine_program_mode => program_run.program_mode
+net _program_auto_mode => program_run.auto_toggle
 net _program_single_mode => program_run.single_toggle
+net _program_jog_mode => program_run.jog_toggle
 net _cycle-button pyvcp.cycle-button => program_run.cycle_button
 net _pause-button pyvcp.pause-button => program_run.pause_button
 net _program.is-idle halui.program.is-idle => program_run.is_idle
@@ -201,7 +202,7 @@ net _lut5_5_out lut5.5.out => pyvcp.x-led
 net _lut5_6_out lut5.6.out => pyvcp.y-led
 net _lut5_7_out lut5.7.out => pyvcp.z-led
 
-#Jog-wheel
+### Jog-wheel
 setp axis.x.jog-scale 0.001
 setp axis.y.jog-scale 0.001
 setp axis.z.jog-scale 0.001
@@ -210,6 +211,8 @@ setp axis.y.jog-vel-mode true
 setp axis.z.jog-vel-mode true
 net _conv_mpg_in pyvcp.my-wheel => conv_mpg.in
 net _conv_mpg_out conv_mpg.out
+
+#machine jogging
 setp progressive_jog.delta_t 0.05
 setp progressive_jog.speed_scale 1.0
 net _conv_mpg_out => progressive_jog.count_in
@@ -222,3 +225,11 @@ net _jog_wheel_count_out => axis.z.jog-counts
 net _or2_3_out => halui.axis.x.select
 net _or2_4_out => halui.axis.y.select
 net _or2_5_out => halui.axis.z.select
+
+#cycle jogging
+net _conv_mpg_out => cycle_jog.count_in
+setp cycle_jog.delta_t 0.05
+setp cycle_jog.speed_scale 0.01
+net _program_run_cycle_jog program_run.cycle_jog => cycle_jog.active
+net _cycle_jog_speed cycle_jog.speed => motion.adaptive-feed
+
