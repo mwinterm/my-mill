@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import hal, time
+import hal
+import time
 h = hal.component("program_run")
 h.newpin("cycle_button", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("pause_button", hal.HAL_BIT, hal.HAL_IN)
@@ -20,39 +21,47 @@ h.ready()
 
 try:
     while 1:
-        if (h['cycle_button'] and h['is_idle'] and h['auto_toggle'] and h['program_mode']): #start program
+        # start program
+        if (h['cycle_button'] and h['is_idle'] and h['auto_toggle'] and h['program_mode']):
             h['step'] = 0
             h['resume'] = 0
             h['run'] = 1
-        elif (h['cycle_button'] and h['single_toggle'] and h['program_mode']): #start program in single step mode
+        # start program in single step mode
+        elif (h['cycle_button'] and h['single_toggle'] and h['program_mode']):
             h['run'] = 0
             h['resume'] = 0
             h['step'] = 1
-        elif (h['cycle_button'] and h['is_paused'] and h['auto_toggle'] and h['program_mode']): #restart program after pause
+        # restart program after pause
+        elif (h['cycle_button'] and h['is_paused'] and h['auto_toggle'] and h['program_mode']):
             h['step'] = 0
             h['run'] = 0
             h['resume'] = 1
-        elif (not h['is_paused'] and h['single_toggle'] and h['program_mode']): #switch to single step 
+        # switch to single step
+        elif (not h['is_paused'] and h['single_toggle'] and h['program_mode']):
             h['step'] = 0
             h['resume'] = 0
             h['run'] = 0
             h['pause'] = 1
-        elif (h['pause_button'] and h['program_mode']): #pause program
+        # pause program
+        elif (h['pause_button'] and h['program_mode']):
             h['step'] = 0
             h['resume'] = 0
             h['run'] = 0
             h['pause'] = 1
-        elif (h['cycle_button'] and h['is_idle'] and h['jog_toggle'] and h['program_mode']): #start program
+        # start program
+        elif (h['cycle_button'] and h['is_idle'] and h['jog_toggle'] and h['program_mode']):
             h['step'] = 0
             h['resume'] = 0
             h['run'] = 1
             h['cycle_jog'] = True
-        elif (h['cycle_button'] and h['is_paused'] and h['jog_toggle'] and h['program_mode']): #restart program after pause
+        # restart program after pause in cycle-jog
+        elif (h['cycle_button'] and h['is_paused'] and h['jog_toggle'] and h['program_mode']):
             h['step'] = 0
             h['run'] = 0
             h['resume'] = 1
             h['cycle_jog'] = True
-        elif (h['is_running'] and h['jog_toggle'] and h['program_mode']): #restart program after pause
+        # set the cycle-jog pin
+        elif (h['is_running'] and h['jog_toggle'] and h['program_mode']):
             h['cycle_jog'] = True
         else:
             h['run'] = 0

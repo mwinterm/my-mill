@@ -77,6 +77,7 @@ net _program.is-running => blink.is_running
 net _program.is-paused => blink.is_paused
 net _program_auto_mode => blink.auto
 net _program_single_mode => blink.single
+net _program_jog_mode => blink.jog
 net _blink.green blink.green => pyvcp.cycle-led
 net _blink.red blink.red => pyvcp.pause-led
 #net _program.is-running => pyvcp.cycle-led

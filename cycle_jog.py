@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-import hal, time
+import hal
+import time
 h = hal.component("cycle_jog")
 h.newpin("active", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("count_in", hal.HAL_S32, hal.HAL_IN)
@@ -16,33 +17,33 @@ new_time = old_time
 count_out = old_count
 
 try:
-    #wait delta_t is set to avoid division by 0
+    # wait delta_t is set to avoid division by 0
     while h['delta_t'] == 0.0:
         time.sleep(0.1)
 
-    #main while-loop
+    # main while-loop
     while 1:
-      new_time = time.time()
-      new_count = h['count_in']
-      while (new_time - old_time) < h['delta_t']:
-        time.sleep(0.05)
         new_time = time.time()
         new_count = h['count_in']
-        
-      speed = (new_count-old_count)/(new_time-old_time) * h['speed_scale']
-      
-      if speed > 0.0:
-          speed = min(speed, 1.0)
-      else:
-          speed = max(speed, -1.0)
+        while (new_time - old_time) < h['delta_t']:
+            time.sleep(0.05)
+            new_time = time.time()
+            new_count = h['count_in']
 
-      if h['active']:
-          h['speed'] = speed
-      else:
-          h['speed'] = 1.0
+        speed = (new_count-old_count)/(new_time-old_time) * h['speed_scale']
 
-      old_time = new_time
-      old_count = new_count
+        if speed > 0.0:
+            speed = min(speed, 1.0)
+        else:
+            speed = max(speed, -1.0)
+
+        if h['active']:
+            h['speed'] = speed
+        else:
+            h['speed'] = 1.0
+
+        old_time = new_time
+        old_count = new_count
 
 
 except KeyboardInterrupt:
