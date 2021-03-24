@@ -44,6 +44,16 @@ setp lut5.2.function 0x8000
 setp lut5.3.function 0xffffffed
 setp lut5.4.function 0xfffffff9
 
+#hal-recorder
+net _record_button pyvcp.record-button => hal_recorder.record
+net _record_button pyvcp.record-led
+net _program.is-idle => hal_recorder.in0
+net _program.is-paused => hal_recorder.in1
+net _program.is-running => hal_recorder.in2
+net _program_run => hal_recorder.in3
+net _program_step => hal_recorder.in4
+net _program_resume => hal_recorder.in5
+net _program_pause => hal_recorder.in6
 
 # connect user pannel
 #Wire the machine-mode toggles

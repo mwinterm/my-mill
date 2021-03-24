@@ -1,3 +1,4 @@
 *.bak
 *.txt
 *.var
+settings.json

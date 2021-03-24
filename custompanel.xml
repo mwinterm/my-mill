@@ -186,13 +186,25 @@
 			<off_color>"grey"</off_color>
 		</led>
 		<button>
-			<halpin>"power-button"</halpin>
+			<halpin>"motion-button"</halpin>
 			<font>("Helvetica",16)</font>
-			<text>"POWER"</text>
+			<text>"MOTION"</text>
 		</button>
 		<led>
 			<halpin>"power-led"</halpin>
 			<on_color>"white"</on_color>
+			<off_color>"grey"</off_color>
+		</led>
+	</hbox>
+		<hbox>
+		<checkbutton>
+			<halpin>"record-button"</halpin>
+			<font>("Helvetica",16)</font>
+			<text>"Record"</text>
+		</checkbutton>
+		<led>
+			<halpin>"record-led"</halpin>
+			<on_color>"red"</on_color>
 			<off_color>"grey"</off_color>
 		</led>
 	</hbox>
