@@ -26,7 +26,7 @@ try:
         while(h['record']):
             row = [0]
             for i in range(n_inputs):
-                row.append(h['in'+str(i)])
+                row.append(int(h['in'+str(i)]))
             if old_row != row:
                 old_row = deepcopy(row)
                 row[0] = time.time() - start_time
@@ -34,7 +34,7 @@ try:
 
         if len(table):
             with open('hal_record' + str(h['rec-number']) + '.csv', 'wb') as csvfile:
-                my_writer = csv.writer(csvfile, delimiter=' ',
+                my_writer = csv.writer(csvfile, delimiter=',',
                                        quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
                 my_writer.writerow(header)
