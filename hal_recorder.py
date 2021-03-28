@@ -8,7 +8,7 @@ h = hal.component("hal_recorder")
 h.newpin("record", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("rec-number", hal.HAL_S32, hal.HAL_OUT)
 
-n_inputs = 10  # number of input channels
+n_inputs = 64  # number of input channels
 header = ["Time"]
 for i in range(n_inputs):
     h.newpin("in"+str(i), hal.HAL_BIT, hal.HAL_IN)
@@ -28,6 +28,9 @@ try:
             for i in range(n_inputs):
                 row.append(int(h['in'+str(i)]))
             if old_row != row:
+                if(len(old_row)):
+                    old_row[0] = time.time() - start_time
+                    table.append(old_row)
                 old_row = deepcopy(row)
                 row[0] = time.time() - start_time
                 table.append(row)
@@ -42,7 +45,6 @@ try:
                     my_writer.writerow(row)
 
                 h['rec-number'] += 1
-
 
 except KeyboardInterrupt:
     raise SystemExit
