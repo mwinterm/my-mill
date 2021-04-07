@@ -2,4 +2,4 @@
 *.txt
 *.var
 settings.json
-.~lock.hal_record0.csv#
+*.csv
