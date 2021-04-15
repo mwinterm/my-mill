@@ -3,3 +3,5 @@
 *.var
 settings.json
 *.csv
+*.pyc
+.~lock*
