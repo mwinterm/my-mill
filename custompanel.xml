@@ -7,6 +7,7 @@
   <vbox>
   <relief>RAISED</relief>
   <bd>3</bd>
+  <hbox>
 	<vbox>
 		<radiobutton>
 			<choices>["Manual", "MDI", "Program"]</choices>
@@ -22,7 +23,12 @@
 			<initval>0</initval>
 		</radiobutton>
 	</vbox>
-
+	 <led>
+            <halpin>"lub_led"</halpin>
+            <on_color>"yellow"</on_color>
+            <off_color>"grey"</off_color>
+     </led>
+	</hbox>
         <hbox>
 	<relief>RAISED</relief>
 	  <jogwheel>

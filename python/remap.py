@@ -18,6 +18,7 @@
 #
 import sys
 import traceback
+import hal
 from math import sin,cos
 
 from interpreter import *
@@ -77,6 +78,14 @@ def setspeed(self,**words):
         return INTERP_ERROR
     return INTERP_OK
 
+# def m199(self, **words)
+#     for key in words:
+#         MESSAGE("word '%s' = %f" % (key, words[key]))
+#     if words.has_key('p'):
+#         MESSAGE("the P word was present")
+#     MESSAGE("comment on this line: '%s'" % (self.blocks[self.remap_level].comment))
+#     return INTERP_OK
+
 def g886(self, **words):
     for key in words:
         MESSAGE("word '%s' = %f" % (key, words[key]))
@@ -84,6 +93,18 @@ def g886(self, **words):
         MESSAGE("the P word was present")
     MESSAGE("comment on this line: '%s'" % (self.blocks[self.remap_level].comment))
     return INTERP_OK
+
+# Lubrication cycle
+def m901(self, **words):
+    if words.has_key('p'):
+        if words['p'] == 0:
+            hal.set_p("lubrication.paused","False")
+        elif words['p'] == 1:
+            hal.set_p("lubrication.paused","True")
+    else: 
+        hal.set_p("lubrication.lube_command","True")
+    return INTERP_OK
+
 
 
 def involute(self, **words):

@@ -36,6 +36,12 @@ addf not.0 servo-thread
 addf not.1 servo-thread
 addf not.2 servo-thread
 addf not.3 servo-thread
+addf integ.0 servo-thread
+addf integ.1 servo-thread
+addf integ.2 servo-thread
+addf abs.0 servo-thread
+addf abs.1 servo-thread
+addf abs.2 servo-thread
 
 
 setp lut5.0.function 0x8000
@@ -243,4 +249,26 @@ setp cycle_jog.delta_t 0.05
 setp cycle_jog.speed_scale 0.01
 net _program_run_cycle_jog program_run.cycle_jog => cycle_jog.active
 net _cycle_jog_speed cycle_jog.speed => motion.adaptive-feed
+
+#lubrication
+net _joint_vel_0 joint.0.vel-cmd => abs.0.in
+net _integrator_0 abs.0.out => integ.0.in
+net _integ_0_out integ.0.out => lubrication.joint0_integ
+net _integ_reset => integ.0.reset
+
+net _joint_vel_1 joint.1.vel-cmd => abs.1.in
+net _integrator_1 abs.1.out => integ.1.in
+net _integ_1_out integ.1.out => lubrication.joint1_integ
+net _integ_reset => integ.1.reset
+
+net _joint_vel_2 joint.2.vel-cmd => abs.2.in
+net _integrator_2 abs.2.out => integ.2.in
+net _integ_2_out integ.2.out => lubrication.joint2_integ
+net _integ_reset => integ.2.reset
+
+net _integ_reset <= lubrication.integ_reset
+
+setp lubrication.lube_time 15.0
+net _lube_signal lubrication.lube_pump => lubrication.lube_pressure
+net _lube_signal => pyvcp.lub_led
 

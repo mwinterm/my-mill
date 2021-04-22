@@ -22,6 +22,8 @@ loadrt near names=near_speed
 loadrt scale names=rpm_rps,jog_speed_scale
 loadrt mux4 names=rapid_speed_mux
 loadrt not count=4
+loadrt integ count=3
+loadrt abs count=3
 
 #load user components
 loadusr -W ./blink.py
@@ -29,6 +31,7 @@ loadusr -W ./program_run.py
 loadusr -W ./progressive_jog.py
 loadusr -W ./cycle_jog.py
 loadusr -W ./hal_recorder.py
+loadusr -W ./lubrication.py
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
