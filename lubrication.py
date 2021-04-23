@@ -4,6 +4,8 @@ import time
 h = hal.component("lubrication")
 h.newparam("lub_command", hal.HAL_BIT, hal.HAL_RW)
 h.newparam("lub_cycle_time", hal.HAL_FLOAT, hal.HAL_RW)
+h.newparam("num_cycles", hal.HAL_S32, hal.HAL_RW)
+h.newparam("start_cycles_pause", hal.HAL_FLOAT, hal.HAL_RW)
 h.newparam("paused", hal.HAL_BIT, hal.HAL_RW)
 h.newparam("lub_interval_time", hal.HAL_FLOAT, hal.HAL_RW)
 h.newparam("lub_interval_timer", hal.HAL_FLOAT, hal.HAL_RO)
@@ -13,6 +15,7 @@ h.newparam("joint2_lub_dist", hal.HAL_FLOAT, hal.HAL_RW)
 h.newparam("joint0_lub_hubs", hal.HAL_FLOAT, hal.HAL_RW)
 h.newparam("joint1_lub_hubs", hal.HAL_FLOAT, hal.HAL_RW)
 h.newparam("joint2_lub_hubs", hal.HAL_FLOAT, hal.HAL_RW)
+
 h.newpin("lub_pressure", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("joint0_integ", hal.HAL_FLOAT, hal.HAL_IN)
 h.newpin("joint1_integ", hal.HAL_FLOAT, hal.HAL_IN)
@@ -35,6 +38,9 @@ try:
         h.integ_reset = False
         h.lub_interval_timer = time.time() - lub_timer
 
+        if h.num_cycles < 0 and time.time() - lub_timer > h.start_cycles_pause:
+            h.lub_command = True
+
         if h.joint0_integ > h.joint0_lub_dist or h.joint1_integ > h.joint1_lub_dist or h.joint2_integ > h.joint2_lub_dist:
             h.lub_command = True
 
@@ -55,6 +61,7 @@ try:
             start_time = -1.0
             h.integ_reset = True
             lub_timer = time.time()
+            h.num_cycles +=1
         
 
 
