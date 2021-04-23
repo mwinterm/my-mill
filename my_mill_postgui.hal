@@ -251,6 +251,17 @@ net _program_run_cycle_jog program_run.cycle_jog => cycle_jog.active
 net _cycle_jog_speed cycle_jog.speed => motion.adaptive-feed
 
 #lubrication
+setp lubrication.lub_cycle_time         [LUBRICATION]LUB_CYCLE_TIME
+setp lubrication.lub_interval_time      [LUBRICATION]LUB_INTERVAL_TIME
+
+setp lubrication.joint0_lub_dist        [LUBRICATION]JOINT0_LUB_DIST
+setp lubrication.joint1_lub_dist        [LUBRICATION]JOINT1_LUB_DIST
+setp lubrication.joint2_lub_dist        [LUBRICATION]JOINT2_LUB_DIST
+
+setp lubrication.joint0_lub_hubs        [LUBRICATION]JOINT0_LUB_HUBS
+setp lubrication.joint1_lub_hubs        [LUBRICATION]JOINT1_LUB_HUBS
+setp lubrication.joint2_lub_hubs        [LUBRICATION]JOINT2_LUB_HUBS
+
 net _joint_vel_0 joint.0.vel-cmd => abs.0.in
 net _integrator_0 abs.0.out => integ.0.in
 net _integ_0_out integ.0.out => lubrication.joint0_integ
@@ -266,9 +277,12 @@ net _integrator_2 abs.2.out => integ.2.in
 net _integ_2_out integ.2.out => lubrication.joint2_integ
 net _integ_reset => integ.2.reset
 
+net _joint_vel_0 => lubrication.joint0_vel
+net _joint_vel_1 => lubrication.joint1_vel
+net _joint_vel_2 => lubrication.joint2_vel
+
 net _integ_reset <= lubrication.integ_reset
 
-setp lubrication.lube_time 15.0
-net _lube_signal lubrication.lube_pump => lubrication.lube_pressure
-net _lube_signal => pyvcp.lub_led
+net _lub_signal lubrication.lub_pump => lubrication.lub_pressure
+net _lub_signal => pyvcp.lub_led
 
