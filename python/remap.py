@@ -102,7 +102,7 @@ def m901(self, **words):
         elif words['p'] == 1:
             hal.set_p("lubrication.paused","True")
     else: 
-        hal.set_p("lubrication.lube_command","True")
+        hal.set_p("lubrication.lub_command","True")
     return INTERP_OK
 
 
