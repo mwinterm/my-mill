@@ -192,12 +192,12 @@
 			<off_color>"grey"</off_color>
 		</led>
 		<button>
-			<halpin>"motion-button"</halpin>
+			<halpin>"toolchange-button"</halpin>
 			<font>("Helvetica",16)</font>
-			<text>"MOTION"</text>
+			<text>"TOOLCHANGE"</text>
 		</button>
 		<led>
-			<halpin>"power-led"</halpin>
+			<halpin>"toolchange-led"</halpin>
 			<on_color>"white"</on_color>
 			<off_color>"grey"</off_color>
 		</led>
