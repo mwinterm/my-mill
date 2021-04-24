@@ -4,7 +4,7 @@
 # kinematics
 loadrt [KINS]KINEMATICS
 # motion controller, get name and thread periods from ini file
-loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
+loadrt [EMCMOT]EMCMOT base_period_nsec=[EMCMOT]BASE_PERIOD servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS unlock_joints_mask=4
 # load 6 differentiators (for velocity and accel signals
 loadrt ddt names=ddt_x,ddt_xv,ddt_y,ddt_yv,ddt_z,ddt_zv
 # load additional blocks
@@ -51,6 +51,9 @@ addf vel_xyz servo-thread
 net Xpos joint.0.motor-pos-cmd => joint.0.motor-pos-fb ddt_x.in
 net Ypos joint.1.motor-pos-cmd => joint.1.motor-pos-fb ddt_y.in
 net Zpos joint.2.motor-pos-cmd => joint.2.motor-pos-fb ddt_z.in
+
+#provide unlock-signal to joint 2
+#net _unlock_joint_2 joint.2.unlock => joint.2.is-unlocked
 
 # send the position commands thru differentiators to
 # generate velocity and accel signals
