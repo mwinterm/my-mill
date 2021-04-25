@@ -275,7 +275,15 @@ net _integ_reset <= lubrication.integ_reset
 net _lub_signal lubrication.lub_pump => lubrication.lub_pressure
 net _lub_signal => pyvcp.lub_led
 
-#toolchange
-net _toolchange_button pyvcp.toolchange-button => hal_manualtoolchange.change_button
-net tool-change => pyvcp.toolchange-led 
-
+#drive activation and toolchange
+net _toolchange_button pyvcp.toolchange-button => drives.toolchange_button
+net _drives_machine_is_on halui.machine.is-on => drives.machine_is_on
+net tool-change => drives.tool_change
+net _estop_active halui.estop.is-activated => drives.e_stop_contactor
+net _feed_drive drives.feed_driver => drives.feed_contactor
+net _manual_mode halui.mode.is-manual => drives.halui_mode_is_manual
+net _spindle_is_on => drives.rpm_surveillance
+net XYZvel => drives.vel_xyz
+net _machine_on drives.machine_on => halui.machine.on
+net _tc_led drives.toolchange_button_led => pyvcp.toolchange-led
+net _tc_button_out drives.toolchange_button_out => hal_manualtoolchange.change_button

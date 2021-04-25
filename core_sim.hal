@@ -32,6 +32,7 @@ loadusr -W ./progressive_jog.py
 loadusr -W ./cycle_jog.py
 loadusr -W ./hal_recorder.py
 loadusr -W ./lubrication.py
+loadusr -W ./drives.py
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
