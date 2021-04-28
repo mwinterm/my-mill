@@ -251,6 +251,8 @@ setp lubrication.joint0_lub_hubs        [LUBRICATION]JOINT0_LUB_HUBS
 setp lubrication.joint1_lub_hubs        [LUBRICATION]JOINT1_LUB_HUBS
 setp lubrication.joint2_lub_hubs        [LUBRICATION]JOINT2_LUB_HUBS
 
+net _machine_is_on => lubrication.machine_is_on
+
 net _joint_vel_0 joint.0.vel-cmd => abs.0.in
 net _integrator_0 abs.0.out => integ.0.in
 net _integ_0_out integ.0.out => lubrication.joint0_integ
@@ -277,7 +279,7 @@ net _lub_signal => pyvcp.lub_led
 
 #drive activation and toolchange
 net _toolchange_button pyvcp.toolchange-button => drives.toolchange_button
-net _drives_machine_is_on halui.machine.is-on => drives.machine_is_on
+net _machine_is_on halui.machine.is-on => drives.machine_is_on
 net tool-change => drives.tool_change
 net _estop_active halui.estop.is-activated => drives.e_stop_contactor
 net _feed_drive drives.feed_driver => drives.feed_contactor
