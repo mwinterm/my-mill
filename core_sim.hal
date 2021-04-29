@@ -21,7 +21,7 @@ loadrt lowpass names=spindle_mass
 loadrt near names=near_speed
 loadrt scale names=rpm_rps,jog_speed_scale
 loadrt mux4 names=rapid_speed_mux
-loadrt not count=4
+loadrt not count=5
 loadrt integ count=3
 loadrt abs count=3
 
@@ -71,6 +71,7 @@ net XYZvel <= vel_xyz.out
 
 # estop loopback
 net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
+net estop-active <= halui.estop.is-activated 
 
 # create signals for tool loading loopback
 net tool-prep-loop iocontrol.0.tool-prepare iocontrol.0.tool-prepared

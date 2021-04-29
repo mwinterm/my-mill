@@ -31,6 +31,7 @@ addf integ.2 servo-thread
 addf abs.0 servo-thread
 addf abs.1 servo-thread
 addf abs.2 servo-thread
+addf not.4 servo-thread
 
 
 setp lut5.3.function 0xffffffed
@@ -278,10 +279,12 @@ net _lub_signal lubrication.lub_pump => lubrication.lub_pressure
 net _lub_signal => pyvcp.lub_led
 
 #drive activation and toolchange
+net estop-active => drives.estop_active
 net _toolchange_button pyvcp.toolchange-button => drives.toolchange_button
 net _machine_is_on halui.machine.is-on => drives.machine_is_on
 net tool-change => drives.tool_change
-net _estop_active halui.estop.is-activated => drives.e_stop_contactor
+net estop-active => not.4.in
+net _not_4_out not.4.out  => drives.e_stop_contactor
 net _feed_drive drives.feed_driver => drives.feed_contactor
 net _manual_mode halui.mode.is-manual => drives.halui_mode_is_manual
 net _spindle_is_on => drives.rpm_surveillance
