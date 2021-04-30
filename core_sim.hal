@@ -24,6 +24,7 @@ loadrt mux4 names=rapid_speed_mux
 loadrt not count=5
 loadrt integ count=3
 loadrt abs count=3
+loadrt oneshot count=2
 
 #load user components
 loadusr -W ./blink.py
@@ -33,6 +34,7 @@ loadusr -W ./cycle_jog.py
 loadusr -W ./hal_recorder.py
 loadusr -W ./lubrication.py
 loadusr -W ./drives.py
+loadusr -W ./geared_spindle.py
 
 # add motion controller functions to servo thread
 addf motion-command-handler servo-thread
@@ -46,6 +48,8 @@ addf ddt_z servo-thread
 addf ddt_zv servo-thread
 addf vel_xy servo-thread
 addf vel_xyz servo-thread
+addf oneshot.0 servo-thread
+addf oneshot.1 servo-thread
 
 # create HAL signals for position commands from motion module
 # loop position commands back to motion module feedback
@@ -69,9 +73,7 @@ net Zacc <= ddt_zv.out
 net XYvel vel_xy.out => vel_xyz.in1
 net XYZvel <= vel_xyz.out
 
-# estop loopback
-net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
-net estop-active <= halui.estop.is-activated 
+
 
 # create signals for tool loading loopback
 net tool-prep-loop iocontrol.0.tool-prepare iocontrol.0.tool-prepared

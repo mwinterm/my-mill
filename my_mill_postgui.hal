@@ -37,6 +37,27 @@ addf not.4 servo-thread
 setp lut5.3.function 0xffffffed
 setp lut5.4.function 0xfffffff9
 
+# estop
+net _estop_trigger => halui.estop.activate
+net _estop_release => halui.estop.reset
+
+setp oneshot.0.rising true
+setp oneshot.0.falling false
+setp oneshot.0.width 0.1
+setp oneshot.1.rising false
+setp oneshot.1.falling true
+setp oneshot.1.width 0.1
+
+net _estop_button <= pyvcp.e-stop
+net estop-active => pyvcp.e-stop-led
+net _estop_button => oneshot.0.in
+net _estop_button => oneshot.1.in
+net _estop_trigger <= oneshot.0.out
+net _estop_release <= oneshot.1.out
+
+net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
+net estop-active <= halui.estop.is-activated 
+
 #hal-recorder
 net _record_button pyvcp.record-button => hal_recorder.record
 net _record_button pyvcp.record-led
@@ -292,3 +313,6 @@ net XYZvel => drives.vel_xyz
 net _machine_on drives.machine_on => halui.machine.on
 net _tc_led drives.toolchange_button_led => pyvcp.toolchange-led
 net _tc_button_out drives.toolchange_button_out => hal_manualtoolchange.change_button
+
+#spindle and gearbox
+net estop-active => geared_spindle.estop_active

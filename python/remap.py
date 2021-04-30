@@ -20,6 +20,7 @@ import sys
 import traceback
 import hal
 from math import sin,cos
+import linuxcnc
 
 from interpreter import *
 from emccanon import MESSAGE, SET_MOTION_OUTPUT_BIT, CLEAR_MOTION_OUTPUT_BIT,SET_AUX_OUTPUT_BIT,CLEAR_AUX_OUTPUT_BIT
@@ -31,52 +32,21 @@ throw_exceptions = 1 # raises InterpreterException if execute() or read() fail
 
 def setspeed(self,**words):
     if self.task==0:
-        return INTERP_OK #do nothing in preview or simulation mode
+        return INTERP_OK #do nothing in preview or simulation mod
 
-    try:
-        c = self.blocks[self.remap_level]
-        if not c.s_flag:
-            self.set_errormsg("S requires a value") 
-            return INTERP_ERROR
-
-        speed = int(c.s_number)
-
-        speed_dict = {
-            0: "0000", 
-            40: "1000", 
-            50: "1000", 
-            63: "1000", 
-            80: "1000", 
-            100: "1000", 
-            125: "1000", 
-            160: "1000", 
-            200: "1000", 
-            250: "1000", 
-            315: "1000", 
-            400: "1000", 
-            500: "1000", 
-            630: "1000", 
-            800: "1000", 
-            1000: "1000", 
-            1250: "1000", 
-            1600: "1000", 
-            2000: "1000", 
-            2500: "1000", 
-            3150: "1000", 
-            4000: "1000"}
-
-        if speed in speed_dict:
-            print(speed_dict[speed])
-        else:
-            self.set_errormsg("Spindle speed not available") 
-
-
-
-
-    except Exception,e:
-        self.set_errormsg("S/setspeed_prolog: %s)" % (e))
+    c = self.blocks[self.remap_level]
+    if not c.s_flag:
+        self.set_errormsg("S requires a value") 
         return INTERP_ERROR
-    return INTERP_OK
+
+    speed = int(c.s_number)
+
+    speeds = [0, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000]
+  
+    if speed in speeds:
+        hal.set_p("geared_spindle.rpms", str(speed))
+    else:
+        self.set_errormsg("Spindle speed not available")
 
 # def m199(self, **words)
 #     for key in words:
@@ -100,6 +70,18 @@ def m901(self, **words):
         if words['p'] == 0:
             hal.set_p("lubrication.paused","False")
         elif words['p'] == 1:
+            hal.set_p("lubrication.paused","True")
+    else: 
+        hal.set_p("lubrication.lub_command","True")
+    return INTERP_OK
+
+
+# Lubrication cycle
+def m902(self, **words):
+    if words.has_key('S'):
+        if words['S'] == 0:
+            hal.set_p("lubrication.paused","False")
+        elif words['S'] == 1:
             hal.set_p("lubrication.paused","True")
     else: 
         hal.set_p("lubrication.lub_command","True")
