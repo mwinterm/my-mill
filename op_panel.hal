@@ -1,0 +1,74 @@
+#op-panel hal commands
+
+# estop
+net _estop_trigger => halui.estop.activate
+net _estop_release => halui.estop.reset
+
+setp oneshot.0.rising true
+setp oneshot.0.falling false
+setp oneshot.0.width 0.1
+setp oneshot.1.rising false
+setp oneshot.1.falling true
+setp oneshot.1.width 0.1
+
+net _estop_button <= op_panel.estop
+# net estop-active => pyvcp.e-stop-led
+net _estop_button => oneshot.0.in
+net _estop_button => oneshot.1.in
+net _estop_trigger <= oneshot.0.out
+net _estop_release <= oneshot.1.out
+
+net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
+# net estop-active <= halui.estop.is-activated 
+
+#coolant
+net _coolant_button <= op_panel.coolant-button
+net _coolant_is_on halui.flood.is-on 
+
+addf and2.0 servo-thread
+setp oneshot.2.rising true
+setp oneshot.2.falling false
+setp oneshot.2.width 0.1
+
+net _coolant_button => oneshot.2.in
+net _oneshot2_out oneshot.2.out => and2.0.in0
+net _coolant_is_on => and2.0.in1
+net _coolant_and_on and2.0.out => halui.flood.off
+
+addf and2.1 servo-thread
+addf not.0 servo-thread
+setp oneshot.3.rising true
+setp oneshot.3.falling false
+setp oneshot.3.width 0.1
+
+net _coolant_button => oneshot.3.in
+net _oneshot3_out oneshot.3.out => and2.1.in0
+net _coolant_is_on => not.0.in
+net _not_coolant not.0.out => and2.1.in1
+net _coolant_and_off and2.1.out => halui.flood.on
+
+net _coolant_is_on => op_panel.coolant-led
+
+##########################################
+#drive activation and toolchange
+net estop-active => drives.estop_active
+net _toolchange_button op_panel.tc-button => drives.toolchange_button
+net _machine_is_on halui.machine.is-on => drives.machine_is_on
+net tool-change => drives.tool_change
+net estop-active => not.4.in
+net _not_4_out not.4.out  => drives.e_stop_contactor
+net _feed_drive drives.feed_driver => drives.feed_contactor
+net _manual_mode halui.mode.is-manual => drives.halui_mode_is_manual
+net _spindle_is_on => drives.rpm_surveillance
+net XYZvel => drives.vel_xyz
+net _machine_on drives.machine_on => halui.machine.on
+net _tc_led drives.toolchange_button_led => op_panel.tc-led
+net _tc_button_out drives.toolchange_button_out => iocontrol.0.tool-changed
+
+#bridge some pins
+net estop-active => not.4.in
+
+#jogwheel
+# setp gmoccapy.jog.jog-velocity.count-enable true
+# net _jog_float op_panel.jogwheel-scaled => conv_float_s32.0.in
+# net _jog_int conv_float_s32.0.out => gmoccapy.jog.jog-velocity.counts

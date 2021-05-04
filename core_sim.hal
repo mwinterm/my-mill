@@ -12,19 +12,19 @@ loadrt hypot names=vel_xy,vel_xyz
 #load other hal components
 loadrt or2 names=or2_0,or2_1,or2_3,or2_4,or2_5
 loadrt flipflop names=flipflop_0
-loadrt conv_float_s32 names=conv_feed,conv_mpg
+loadrt conv_float_s32 names=conv_float_s32.0
 loadrt and2 count=11
 loadrt lut5 count=8
 loadrt mult2 count=1
-loadrt limit2 names=limit_speed
-loadrt lowpass names=spindle_mass
-loadrt near names=near_speed
-loadrt scale names=rpm_rps,jog_speed_scale
+#loadrt limit2 names=limit_speed
+#loadrt lowpass names=spindle_mass
+#loadrt near names=near_speed
+#loadrt scale names=rpm_rps,jog_speed_scale
 loadrt mux4 names=rapid_speed_mux
-loadrt not count=5
+loadrt not count=6
 loadrt integ count=3
-loadrt abs count=3
-loadrt oneshot count=2
+loadrt abs count=4
+loadrt oneshot count=4
 
 #load user components
 loadusr -W ./blink.py
@@ -50,6 +50,10 @@ addf vel_xy servo-thread
 addf vel_xyz servo-thread
 addf oneshot.0 servo-thread
 addf oneshot.1 servo-thread
+addf oneshot.2 servo-thread
+addf oneshot.3 servo-thread
+addf conv_float_s32.0 servo-thread
+addf not.4 servo-thread
 
 # create HAL signals for position commands from motion module
 # loop position commands back to motion module feedback
