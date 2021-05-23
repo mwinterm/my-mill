@@ -25,5 +25,54 @@ net tooloffset-x  gmoccapy.tooloffset-x  <=  motion.tooloffset.x
 net tooloffset-z  gmoccapy.tooloffset-z  <=  motion.tooloffset.z
 
 
+#lubrication
+setp lubrication.lub_cycle_time         [LUBRICATION]LUB_CYCLE_TIME
+setp lubrication.lub_interval_time      [LUBRICATION]LUB_INTERVAL_TIME
+setp lubrication.num_cycles             [LUBRICATION]NUM_CYCLES
+setp lubrication.start_cycles_pause     [LUBRICATION]START_CYCLES_PAUSE
+setp lubrication.lub_warning_interval   [LUBRICATION]LUB_WARNING_INTERVAL
+
+setp lubrication.joint0_lub_dist        [LUBRICATION]JOINT0_LUB_DIST
+setp lubrication.joint1_lub_dist        [LUBRICATION]JOINT1_LUB_DIST
+setp lubrication.joint2_lub_dist        [LUBRICATION]JOINT2_LUB_DIST
+
+setp lubrication.joint0_lub_hubs        [LUBRICATION]JOINT0_LUB_HUBS
+setp lubrication.joint1_lub_hubs        [LUBRICATION]JOINT1_LUB_HUBS
+setp lubrication.joint2_lub_hubs        [LUBRICATION]JOINT2_LUB_HUBS
+
+addf abs.0 servo-thread
+addf abs.1 servo-thread
+addf abs.2 servo-thread
+
+addf integ.0 servo-thread
+addf integ.1 servo-thread
+addf integ.2 servo-thread
+
+net _machine_is_on => lubrication.machine_is_on
+
+net _joint_vel_0 joint.0.vel-cmd => abs.0.in
+net _integrator_0 abs.0.out => integ.0.in
+net _integ_0_out integ.0.out => lubrication.joint0_integ
+net _integ_reset => integ.0.reset
+
+net _joint_vel_1 joint.1.vel-cmd => abs.1.in
+net _integrator_1 abs.1.out => integ.1.in
+net _integ_1_out integ.1.out => lubrication.joint1_integ
+net _integ_reset => integ.1.reset
+
+net _joint_vel_2 joint.2.vel-cmd => abs.2.in
+net _integrator_2 abs.2.out => integ.2.in
+net _integ_2_out integ.2.out => lubrication.joint2_integ
+net _integ_reset => integ.2.reset
+
+net _joint_vel_0 => lubrication.joint0_vel
+net _joint_vel_1 => lubrication.joint1_vel
+net _joint_vel_2 => lubrication.joint2_vel
+
+net _integ_reset <= lubrication.integ_reset
+
+net _lub_signal lubrication.lub_pump => lubrication.lub_pressure
+
+
 
 
