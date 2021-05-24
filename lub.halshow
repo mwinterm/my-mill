@@ -1,0 +1,16 @@
+# halshow watchlist created Mon May 24 15:27:01 CEST 2021
+
+pin+lubrication.lub_pump
+pin+lubrication.lub_pressure
+pin+lubrication.machine_is_on
+pin+lubrication.joint2_vel
+pin+lubrication.joint2_integ
+pin+lubrication.joint1_vel
+pin+lubrication.joint1_integ
+pin+lubrication.joint0_vel
+pin+lubrication.joint0_integ
+pin+lubrication.integ_reset
+param+lubrication.lub_command
+param+lubrication.paused
+param+lubrication.start_cycles_pause
+param+lubrication.max_lub_pressure_delay
