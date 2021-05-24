@@ -51,27 +51,14 @@ def m910(self, **words):
 
 
 
-def setspeed(self,**words):
-    for s in words:
-        print(s)
-    # a = dir(self.blocks)
-    # b = self.blocks
-    # print(a)
-    # for x in self.blocks:
-    #     print(str(self.blocks[x]))
-    
+def setspeed(self,**words):    
     speed = 0
     c = self.blocks[self.remap_level]
-    print(c.s_number)
-    print(c.s_flag)
-    if not c.s_flag:
+    if c.s_flag:
         speed = int(c.s_number)
     else: 
-        print("S command without speed value was provided")
-        # cmd.error_msg("S command without speed value was provided")
+        cmd.error_msg("S command without speed value was provided")
         
-    print("AAAAAA")
-
     speeds = {
         0: [2, 3, 2, 1],
         40: [2, 3, 3, 1],
@@ -97,14 +84,8 @@ def setspeed(self,**words):
         4000: [1, 2, 1, 2]
         }
 
-    for speed in speeds:
-        print(speeds[speed])
-  
-    print("BBBBBBBBBBBBBBB")
     if speed in speeds:
-        print(speeds[speed])
         gear = speeds[speed]
-        print(gear)
         hal.set_p("gearbox.block_1_cmd", str(gear[0]))
         hal.set_p("gearbox.block_2_cmd", str(gear[1]))
         hal.set_p("gearbox.block_3_cmd", str(gear[2]))
