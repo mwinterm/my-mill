@@ -28,6 +28,7 @@ h.newpin("spindle_break", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("block_1_cmd", hal.HAL_S32, hal.HAL_IN)
 h.newpin("block_2_cmd", hal.HAL_S32, hal.HAL_IN)
 h.newpin("block_3_cmd", hal.HAL_S32, hal.HAL_IN)
+h.newpin("engine_stage", hal.HAL_S32, hal.HAL_IN)
 h.newpin("block_1_1", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("block_1_2", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("block_2_1", hal.HAL_BIT, hal.HAL_IN)
@@ -66,6 +67,7 @@ block_forward = h.block_1_forward
 block_backward = h.block_1_backward
 
 h.stage_1 = True
+h.stage_2 = False
 
 try:
     while True:
@@ -97,11 +99,11 @@ try:
                 b_1 = block + '1'
                 b_2 = block + '2'
                 if getattr(h, b_1) and getattr(h, b_2):
-                    locals()[block + 'pos'] = 0 
-                if not getattr(h, b_1) and getattr(h, b_2):
                     locals()[block + 'pos'] = 1 
-                if getattr(h, b_1) and not getattr(h, b_2):
+                if not getattr(h, b_1) and getattr(h, b_2):
                     locals()[block + 'pos'] = 2 
+                if getattr(h, b_1) and not getattr(h, b_2):
+                    locals()[block + 'pos'] = 3 
     
             #starting / stopping spindle        
             if h.spindle_on or spindle_on:
@@ -114,6 +116,15 @@ try:
                 else:
                     c.error_msg("No spindle direction set.") 
     
+                if h.engine_stage == 1:
+                    h.stage_1 = True
+                    h.stage_2 = False
+                elif h.engine_stage == 2:
+                    h.stage_1 = False
+                    h.stage_2 = True
+                else:
+                    c.error_msg("No valid engine stage selected.")
+                    
                 h.spindle_break = False
                 h.spindle_motor = True
                 start_check_timer.start()
