@@ -23,6 +23,7 @@ h.newpin("block_2_1", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("block_2_2", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("block_3_1", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("block_3_2", hal.HAL_BIT, hal.HAL_OUT)
+h.newpin("current_measurement", hal.HAL_BIT, hal.HAL_OUT)
 
 h.ready()
 
@@ -33,6 +34,11 @@ block_3_pos = 3
 block_1_timer = Timer(1.0)
 block_2_timer = Timer(1.0)
 block_3_timer = Timer(1.0)
+
+jam = True
+jam_count = 1
+my_jam_count = jam_count
+jam_dir = 0
 
 d = Debug("gearbox_sim")
 d._vocal = True
@@ -52,22 +58,46 @@ try:
                 h[block + '1'] = True
                 h[block + '2'] = False
 
+
         for block in ['block_1_', 'block_2_', 'block_3_']:
             if h[block + 'forward'] == True:
+                if jam:
+                    if jam_dir == -1:
+                        jam_dir = 0
+                        my_jam_count -= 1
+                        h.current_measurement = False
+                    if my_jam_count and not jam_dir: 
+                        jam_dir = 1
+                        h.current_measurement = True
+
                 d.level = 1
                 locals()[block + 'timer'].start()
 
-                if locals()[block + 'timer'].alarm():
+                if locals()[block + 'timer'].alarm() and not h.current_measurement:
                     d.level = 11
                     locals()[block + 'pos'] += 1
+                    locals()[block + 'timer'].stop()
+
+           
 
             elif h[block + 'backward'] == True:
+                if jam:
+                    if jam_dir == 1:
+                        jam_dir = 0
+                        my_jam_count -= 1
+                        h.current_measurement = False
+                    if my_jam_count and not jam_dir: 
+                        jam_dir = -1
+                        h.current_measurement = True
+                
                 d.level = 2
                 locals()[block + 'timer'].start()
                 
-                if locals()[block + 'timer'].alarm():
+                if locals()[block + 'timer'].alarm() and not h.current_measurement:
                     d.level = 12
                     locals()[block + 'pos'] -= 1
+                    locals()[block + 'timer'].stop()
+            
 
             else:
                 locals()[block + 'timer'].stop()

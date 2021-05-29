@@ -32,6 +32,9 @@ h.newparam("block_3_cmd", hal.HAL_S32, hal.HAL_RW)
 h.newparam("block_1_pos", hal.HAL_S32, hal.HAL_RO)
 h.newparam("block_2_pos", hal.HAL_S32, hal.HAL_RO)
 h.newparam("block_3_pos", hal.HAL_S32, hal.HAL_RO)
+h.newparam("block_1_set", hal.HAL_BIT, hal.HAL_RO)
+h.newparam("block_2_set", hal.HAL_BIT, hal.HAL_RO)
+h.newparam("block_3_set", hal.HAL_BIT, hal.HAL_RO)
 h.newpin("block_1_1", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("block_1_2", hal.HAL_BIT, hal.HAL_IN)
 h.newpin("block_2_1", hal.HAL_BIT, hal.HAL_IN)
@@ -53,12 +56,17 @@ h.ready()
 soft_start_timer = Timer(3.0)
 start_check_timer = Timer(0.5)
 current_timer = Timer(1.0)
-block_reset_timer = Timer(0.15)
-block_spindle_timer = Timer(0.2)
+#block_reset_timer = Timer(0.15)
+block_reset_timer = Timer(0.5)
+# block_spindle_timer = Timer(0.2)
+block_spindle_timer = Timer(2.0)
 
 current_alarm_type = ""
 spindle_on = False
 
+block_1_set = True
+block_2_set = True
+bolck_3_set = True
 block_1_pos = 0
 block_2_pos = 0
 block_3_pos = 0
@@ -68,6 +76,8 @@ b_ = ''
 b_1 = ''
 b_2 = ''
 
+
+
 #just for initialization
 block_forward = h.block_1_forward 
 block_backward = h.block_1_backward
@@ -75,7 +85,7 @@ block_backward = h.block_1_backward
 h.stage_1 = True
 
 d = Debug("gearbox")
-d._vocal = False
+d._vocal = True
 
 try:
     while True:
@@ -119,47 +129,46 @@ try:
 
                 if h[block + 'cmd'] == 0:
                     h[block + 'cmd'] = h[block + 'pos']
+                    h[block + 'set'] = True
 
     
-            #starting / stopping spindle        
-            # if h.spindle_on or spindle_on:
-            #     d.level = 2
-            #    
-            #     if h.forward:
-            #         h.cw = True
-            #         h.ccw = False
-            #     elif h.reverse:
-            #         h.cw = False
-            #         h.ccw = True
-            #     else:
-            #         c.error_msg("No spindle direction set.") 
+            # starting / stopping spindle        
+            if h.spindle_on or spindle_on:
+                d.level = 2
+               
+                if h.reverse:
+                    h.cw = False
+                    h.ccw = True
+                else:
+                    h.cw = True
+                    h.ccw = False
     
-            #     h.spindle_break = False
-            #     h.spindle_motor = True
-            #     start_check_timer.start()
-            #     if not start_check_timer():
-            #         if not h.rpm_surveillance:
-            #             c.error_msg("Spindle start: Spindle not turning.")
-            #         if not h.spindle_contactor: 
-            #             c.error_msg("Spindle start: Spindle contactor problem.")
+                h.spindle_break = False
+                h.spindle_motor = True
+                start_check_timer.start()
+                if not start_check_timer():
+                    if not h.rpm_surveillance:
+                        c.error_msg("Spindle start: Spindle not turning.")
+                    if not h.spindle_contactor: 
+                        c.error_msg("Spindle start: Spindle contactor problem.")
     
-            #     soft_start_timer.start()
-            #     if soft_start_timer():
-            #         h.soft_start = True
+                soft_start_timer.start()
+                if soft_start_timer():
+                    h.soft_start = True
     
-            # else:
-            #     h.spindle_motor = False
-            #     h.soft_start = False
-            #     h.cw = False
-            #     h.ccw = False
+            else:
+                h.spindle_motor = False
+                h.soft_start = False
+                h.cw = False
+                h.ccw = False
     
-            #     if h.rpm_surveillance:
-            #         h.spindle_break = True
-            #     else:
-            #         h.spindle_break = False
+                if h.rpm_surveillance:
+                    h.spindle_break = True
+                else:
+                    h.spindle_break = False
     
-            # #setting gearbox
-            # if not h.spindle_on:
+            #setting gearbox
+            if not h.spindle_on:
                 
                 for block in ['block_1_', 'block_2_', 'block_3_']:
                     
@@ -169,53 +178,68 @@ try:
                     b_1 = block + '1'
                     b_2 = block + '2'
                     if h[block + 'cmd'] != h[block + 'pos']:
-                        d.level = 4
-                       
+                        # d.level = 4
+                        h[b_ + 'set'] = False
                         break
                     else:
                         d.level = 5
-                        
                         h[b_ + 'forward'] = False
                         h[b_ + 'backward'] = False
+                        h[b_ + 'set'] = True
                     
-            #     #release any blockage
-            #     if current_timer.alarm():
-            #         if current_alarm_type == "":
-            #             if block_forward:
-            #                 current_alarm_type = "block_forward"
-            #             elif block_backward:
-            #                 current_alarm_type = "block_backward"
+                #release any blockage
+                if current_timer.alarm():
+                    block_reset_timer.start()
+
+                    # if block_reset_timer.alarm():
+                    #     current_timer.stop()
+
+                    #identify jam type
+                    if current_alarm_type == "":
+                        if h[b_ + 'forward']:
+                            current_alarm_type = "block_forward"
+                        elif h[b_ + 'backward']:
+                            current_alarm_type = "block_backward"
     
-            #         if current_alarm_type == "block_forward":
-            #             block_forward = False
-            #             block_reset_timer.start()
-            #             if block_reset_timer():
-            #                 block_backward = True
-            #                 continue
-            #             else:
-            #                 block_backward = False
-            #                 block_spindle_timer.start()
-            #                 continue
+                    if current_alarm_type == "block_forward":
+                        d.level = 20
+                        h[b_ + 'forward'] = False
+                        block_reset_timer.start()
+                        if block_reset_timer():
+                            d.level = 21
+                            h[b_ + 'backward'] = True
+                            continue
+                        else:
+                            d.level = 22
+                            h[b_ + 'backward'] = False
+                            block_spindle_timer.start()
                         
-            #         elif current_alarm_type == "block_1_backward":
-            #             block_backward = False
-            #             block_reset_timer.start()
-            #             if block_reset_timer():
-            #                 block_forward = True
-            #                 continue
-            #             else:
-            #                 block_forward = False
-            #                 block_spindle_timer.start()
-            #                 continue
+                    elif current_alarm_type == "block_1_backward":
+                        d.level = 23
+                        h[b_ + 'backward'] = False
+                        block_reset_timer.start()
+                        if block_reset_timer():
+                            d.level = 24
+                            h[b_ + 'forward'] = True
+                            continue
+                        else:
+                            h[b_ + 'forward'] = False
+                            block_spindle_timer.start()
+                            continue
                         
-            #         if block_spindle_timer():
-            #             spindle_on = True
-            #             continue
-            #         else:
-            #             spindle_on = False
+                    if block_spindle_timer():
+                        d.level = 25
+                        spindle_on = True
+                        continue
+                    else:
+                        spindle_on = False
     
-            #         current_timer.stop()
-            #         current_alarm_type = ""
+                    d.level = 30
+                    current_timer.stop()
+                    block_reset_timer.stop()
+                    block_spindle_timer.stop()
+                    current_alarm_type = ""
+                    continue
     
                 #Set the gearbox
                 if block_cmd > block_pos:
@@ -224,8 +248,11 @@ try:
                     h[b_ + 'forward'] = True
                     h[b_ + 'backward'] = False
                     if h.current_measurement:
+                        # d.level = 41
                         current_timer.start()
+                        print(str(current_timer.time()))
                     else:
+                        # d.level = 42
                         current_timer.stop()
                 elif block_cmd < block_pos:
                     d.level = 11

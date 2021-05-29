@@ -77,6 +77,7 @@ net _lub_signal lubrication.lub_pump => lubrication.lub_pressure
 
 #spindle and gearbox
 net _estop => gearbox.estop
+net _current_measurement gearbox.current_measurement <= gearbox_sim.current_measurement
 
 net _block_1_forward gearbox.block_1_forward => gearbox_sim.block_1_forward
 net _block_2_forward gearbox.block_2_forward => gearbox_sim.block_2_forward
@@ -91,4 +92,8 @@ net _block_2_1 gearbox.block_2_1 <= gearbox_sim.block_2_1
 net _block_2_2 gearbox.block_2_2 <= gearbox_sim.block_2_2
 net _block_3_1 gearbox.block_3_1 <= gearbox_sim.block_3_1
 net _block_3_2 gearbox.block_3_2 <= gearbox_sim.block_3_2
+
+net _spindle_motor gearbox.spindle_motor
+net _spindle_motor gearbox.spindle_contactor 
+net _spindle_motor gearbox.rpm_surveillance
 

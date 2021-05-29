@@ -1,4 +1,4 @@
-# halshow watchlist created Sat May 29 16:34:40 CEST 2021
+# halshow watchlist created Sat May 29 23:07:30 CEST 2021
 
 pin+gearbox.block_1_forward
 pin+gearbox.block_1_backward
@@ -18,3 +18,5 @@ param+gearbox.block_3_cmd
 param+gearbox.block_3_pos
 pin+gearbox.block_3_1
 pin+gearbox.block_3_2
+pin+gearbox.current_measurement
+pin+gearbox.spindle_motor
