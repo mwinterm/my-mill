@@ -84,6 +84,9 @@ def setspeed(self,**words):
         4000: [1, 2, 1, 2]
         }
 
+
+    emccanon.enqueue_SET_SPINDLE_SPEED(0, c.s_number)
+    
     if speed in speeds:
         gear = speeds[speed]
         hal.set_p("gearbox.block_1_cmd", str(gear[0]))
