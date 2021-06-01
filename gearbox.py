@@ -153,12 +153,13 @@ try:
                         c.error_msg("Spindle start: Spindle contactor problem.")
     
                 soft_start_timer.start()
-                if soft_start_timer():
+                if soft_start_timer.alarm():
                     h.soft_start = True
     
             else:
                 h.spindle_motor = False
                 h.soft_start = False
+                soft_start_timer.stop()
                 h.cw = False
                 h.ccw = False
     

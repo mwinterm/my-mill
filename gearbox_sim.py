@@ -25,6 +25,12 @@ h.newpin("block_3_1", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("block_3_2", hal.HAL_BIT, hal.HAL_OUT)
 h.newpin("current_measurement", hal.HAL_BIT, hal.HAL_OUT)
 
+h.newpin("spindle_motor", hal.HAL_BIT, hal.HAL_IN)
+
+h.newpin("rpm_sensor", hal.HAL_BIT, hal.HAL_OUT)
+
+
+
 h.ready()
 
 block_1_pos = 1
@@ -34,6 +40,8 @@ block_3_pos = 3
 block_1_timer = Timer(1.0)
 block_2_timer = Timer(1.0)
 block_3_timer = Timer(1.0)
+
+rpm_timer = Timer(2.0)
 
 jam = True
 jam_count = 1
@@ -101,6 +109,16 @@ try:
 
             else:
                 locals()[block + 'timer'].stop()
+
+
+        #spindle
+        if h.spindle_motor:
+            h.rpm_sensor = True
+            rpm_timer.stop()
+        else:
+            rpm_timer.start()
+            if rpm_timer.alarm():
+                h.rpm_sensor = False
        
 except KeyboardInterrupt:
     raise SystemExit

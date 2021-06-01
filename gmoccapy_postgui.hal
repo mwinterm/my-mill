@@ -95,9 +95,12 @@ net _block_3_2 gearbox.block_3_2 <= gearbox_sim.block_3_2
 
 net _spindle_motor gearbox.spindle_motor
 net _spindle_motor gearbox.spindle_contactor 
-net _spindle_motor gearbox.rpm_surveillance
 net _spindle_on spindle.0.on => gearbox.spindle_on
 net spindle-fwd => gearbox.forward
 net spindle-rev <= spindle.0.reverse
 net spindle-rev => gearbox.reverse
+
+net _spindle_motor => gearbox_sim.spindle_motor
+net _rpm_sensor <= gearbox_sim.rpm_sensor
+net _rpm_sensor => gearbox.rpm_surveillance
 
