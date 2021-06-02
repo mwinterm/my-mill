@@ -29,6 +29,8 @@ h.newpin("spindle_motor", hal.HAL_BIT, hal.HAL_IN)
 
 h.newpin("rpm_sensor", hal.HAL_BIT, hal.HAL_OUT)
 
+h.newparam("jam_count", hal.HAL_S32, hal.HAL_RW)
+
 
 
 h.ready()
@@ -44,8 +46,7 @@ block_3_timer = Timer(1.0)
 rpm_timer = Timer(2.0)
 
 jam = True
-jam_count = 1
-my_jam_count = jam_count
+h.jam_count = 0
 jam_dir = 0
 
 d = Debug("gearbox_sim")
@@ -72,9 +73,9 @@ try:
                 if jam:
                     if jam_dir == -1:
                         jam_dir = 0
-                        my_jam_count -= 1
+                        h.jam_count -= 1
                         h.current_measurement = False
-                    if my_jam_count and not jam_dir: 
+                    if h.jam_count and not jam_dir: 
                         jam_dir = 1
                         h.current_measurement = True
 
@@ -92,9 +93,9 @@ try:
                 if jam:
                     if jam_dir == 1:
                         jam_dir = 0
-                        my_jam_count -= 1
+                        h.jam_count -= 1
                         h.current_measurement = False
-                    if my_jam_count and not jam_dir: 
+                    if h.jam_count and not jam_dir: 
                         jam_dir = -1
                         h.current_measurement = True
                 

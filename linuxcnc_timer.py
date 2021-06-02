@@ -34,7 +34,9 @@ class Timer(object):
                 self._alarm = True
                 self._is_active = False
                 
-
+    def start_time(self):
+        return self._start_time
+        
     def time(self):
         self.update()
         if self._is_active and self._time_value:

@@ -89,6 +89,7 @@ d._vocal = True
 
 try:
     while True:
+        time.sleep(0.2)
         #e-stop behavior
         if h.estop:
             d.level = 1
@@ -179,7 +180,7 @@ try:
                     b_1 = block + '1'
                     b_2 = block + '2'
                     if h[block + 'cmd'] != h[block + 'pos']:
-                        # d.level = 4
+                        d.level = 4
                         h[b_ + 'set'] = False
                         break
                     else:
@@ -190,10 +191,12 @@ try:
                     
                 #release any blockage
                 if current_timer.alarm():
+                    d.level = 6
                     block_reset_timer.start()
 
-                    # if block_reset_timer.alarm():
-                    #     current_timer.stop()
+                    if block_reset_timer.alarm():
+                        current_timer.stop()
+                        print("A")
 
                     #identify jam type
                     if current_alarm_type == "":
@@ -215,7 +218,7 @@ try:
                             h[b_ + 'backward'] = False
                             block_spindle_timer.start()
                         
-                    elif current_alarm_type == "block_1_backward":
+                    elif current_alarm_type == "block_backward":
                         d.level = 23
                         h[b_ + 'backward'] = False
                         block_reset_timer.start()
@@ -224,19 +227,19 @@ try:
                             h[b_ + 'forward'] = True
                             continue
                         else:
+                            d.level = 25
                             h[b_ + 'forward'] = False
                             block_spindle_timer.start()
-                            continue
+                            #continue
                         
                     if block_spindle_timer():
-                        d.level = 25
+                        d.level = 26
                         spindle_on = True
                         continue
                     else:
                         spindle_on = False
     
                     d.level = 30
-                    current_timer.stop()
                     block_reset_timer.stop()
                     block_spindle_timer.stop()
                     current_alarm_type = ""
@@ -249,12 +252,10 @@ try:
                     h[b_ + 'forward'] = True
                     h[b_ + 'backward'] = False
                     if h.current_measurement:
-                        # d.level = 41
                         current_timer.start()
-                        print(str(current_timer.time()))
                     else:
-                        # d.level = 42
                         current_timer.stop()
+
                 elif block_cmd < block_pos:
                     d.level = 11
                     

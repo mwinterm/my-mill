@@ -85,14 +85,20 @@ def setspeed(self,**words):
         }
 
 
-    emccanon.enqueue_SET_SPINDLE_SPEED(0, c.s_number)
-    
     if speed in speeds:
         gear = speeds[speed]
         hal.set_p("gearbox.block_1_cmd", str(gear[0]))
         hal.set_p("gearbox.block_2_cmd", str(gear[1]))
         hal.set_p("gearbox.block_3_cmd", str(gear[2]))
-        hal.set_p("gearbox.engine_stage", str(gear[3]))
+        if gear[3] == 1:
+            hal.set_p("gearbox.stage_1", '1')
+            hal.set_p("gearbox.stage_2", '0')
+        else:
+            hal.set_p("gearbox.stage_1", '0')
+            hal.set_p("gearbox.stage_2", '1')
+
+        emccanon.enqueue_SET_SPINDLE_SPEED(0, float(speed))
+
         print("gearbox set")
     else:
         cmd.error_msg("Spindle speed not available")
