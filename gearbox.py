@@ -56,10 +56,8 @@ h.ready()
 soft_start_timer = Timer(3.0)
 start_check_timer = Timer(0.5)
 current_timer = Timer(1.0)
-#block_reset_timer = Timer(0.15)
-block_reset_timer = Timer(0.5)
-# block_spindle_timer = Timer(0.2)
-block_spindle_timer = Timer(2.0)
+block_reset_timer = Timer(0.15)
+block_spindle_timer = Timer(0.2)
 
 current_alarm_type = ""
 spindle_on = False
@@ -89,6 +87,7 @@ d._vocal = True
 
 try:
     while True:
+
         time.sleep(0.2)
         #e-stop behavior
         if h.estop:
@@ -155,10 +154,12 @@ try:
     
                 soft_start_timer.start()
                 if soft_start_timer.alarm():
+                    d.level = 200
                     h.soft_start = True
     
             else:
                 h.spindle_motor = False
+                d.level = 201
                 h.soft_start = False
                 soft_start_timer.stop()
                 h.cw = False
@@ -171,6 +172,7 @@ try:
     
             #setting gearbox
             if not h.spindle_on:
+                d.level =1000
                 
                 for block in ['block_1_', 'block_2_', 'block_3_']:
                     
@@ -184,7 +186,6 @@ try:
                         h[b_ + 'set'] = False
                         break
                     else:
-                        d.level = 5
                         h[b_ + 'forward'] = False
                         h[b_ + 'backward'] = False
                         h[b_ + 'set'] = True
@@ -193,10 +194,6 @@ try:
                 if current_timer.alarm():
                     d.level = 6
                     block_reset_timer.start()
-
-                    if block_reset_timer.alarm():
-                        current_timer.stop()
-                        print("A")
 
                     #identify jam type
                     if current_alarm_type == "":
@@ -230,18 +227,19 @@ try:
                             d.level = 25
                             h[b_ + 'forward'] = False
                             block_spindle_timer.start()
-                            #continue
                         
                     if block_spindle_timer():
                         d.level = 26
                         spindle_on = True
                         continue
                     else:
+                        d.level = 27
                         spindle_on = False
     
                     d.level = 30
                     block_reset_timer.stop()
                     block_spindle_timer.stop()
+                    current_timer.stop()
                     current_alarm_type = ""
                     continue
     
