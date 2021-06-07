@@ -313,6 +313,3 @@ net XYZvel => drives.vel_xyz
 net _machine_on drives.machine_on => halui.machine.on
 net _tc_led drives.toolchange_button_led => pyvcp.toolchange-led
 net _tc_button_out drives.toolchange_button_out => hal_manualtoolchange.change_button
-
-#spindle and gearbox
-net estop-active => geared_spindle.estop_active
