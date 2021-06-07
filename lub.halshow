@@ -1,4 +1,4 @@
-# halshow watchlist created Mon May 24 15:27:01 CEST 2021
+# halshow watchlist created Mon Jun 07 11:08:32 CEST 2021
 
 pin+lubrication.lub_pump
 pin+lubrication.lub_pressure
@@ -14,3 +14,4 @@ param+lubrication.lub_command
 param+lubrication.paused
 param+lubrication.start_cycles_pause
 param+lubrication.max_lub_pressure_delay
+param+lubrication.num_cycles

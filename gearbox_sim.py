@@ -50,7 +50,7 @@ h.jam_count = 0
 jam_dir = 0
 
 d = Debug("gearbox_sim")
-d._vocal = True
+d._vocal = False
 
 try:
     while True:

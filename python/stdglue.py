@@ -31,6 +31,16 @@ def setspeed_prolog(self,**words):
         return INTERP_ERROR
     return INTERP_OK
 
+def setspeed(self, **words):
+    try:
+        emccanon.enqueue_SET_SPINDLE_SPEED(0, 46.0)
+        print("SETSPEED: Here I am")
+        return INTERP_OK
+
+    except Exception, e:
+        self.set_errormsg("M6/change_prolog: %s" % (e))
+        return INTERP_ERROR
+
 def setspeed_epilog(self,**words):
     try:
         print("A")

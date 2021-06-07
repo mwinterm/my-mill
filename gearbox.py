@@ -83,7 +83,7 @@ block_backward = h.block_1_backward
 h.stage_1 = True
 
 d = Debug("gearbox")
-d._vocal = True
+d._vocal = False
 
 try:
     while True:

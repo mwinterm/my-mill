@@ -51,7 +51,7 @@ def m910(self, **words):
 
 
 
-def setspeed(self,**words):    
+def setspeed_new(self,**words):    
     speed = 0
     c = self.blocks[self.remap_level]
     if c.s_flag:
