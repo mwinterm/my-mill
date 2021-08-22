@@ -1,0 +1,8 @@
+# halshow watchlist created Wed May 12 21:30:11 CEST 2021
+
+pin+joint.0.index-enable
+pin+joint.0.homing
+pin+joint.0.homed
+pin+joint.0.home-sw-in
+pin+joint.0.home-state
+pin+joint.0.free-tp-enable
